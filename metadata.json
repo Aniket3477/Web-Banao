@@ -1,0 +1,6 @@
+{
+  "name": "WaaS Landing Page",
+  "description": "A high-converting Hinglish landing page for a Website as a Service business targeting local Indian businesses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
