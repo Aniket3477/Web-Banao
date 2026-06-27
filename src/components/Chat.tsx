@@ -44,74 +44,18 @@ export default function Chatbot() {
     setMessages(newMessages);
     setIsLoading(true);
 
-    try {
-      // Format messages for the API (convert to Gemini contents format)
-      const contents = newMessages.map((msg) => ({
-        role: msg.role,
-        parts: [{ text: msg.content }],
-      }));
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ contents }),
-      });
-
-      if (!res.ok) throw new Error("API Error");
-      if (!res.body) throw new Error("No body");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let assistantMsg = "";
-
-      setMessages((prev) => [...prev, { role: "model", content: "" }]);
-
-      while (!done) {
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        const chunkValue = decoder.decode(value, { stream: true });
-
-        // Parse SSE
-        const lines = chunkValue.split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const dataStr = line.slice(6);
-            if (dataStr === "[DONE]") {
-              done = true;
-              break;
-            }
-            try {
-              const data = JSON.parse(dataStr);
-              if (data.text) {
-                assistantMsg += data.text;
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  updated[updated.length - 1].content = assistantMsg;
-                  return updated;
-                });
-              }
-            } catch (err) {
-              console.error("Error parsing SSE:", err);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error(error);
+    // Simulate API call for static site
+    setTimeout(() => {
+      setIsLoading(false);
       setMessages((prev) => [
         ...prev,
         {
           role: "model",
           content:
-            "Maaf karna, abhi kuch problem aa rahi hai. Kripya thodi der me try karein.",
+            "Thank you for your message! Our team will get back to you shortly, or you can use the WhatsApp button to chat with us immediately.",
         },
       ]);
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1500);
   };
 
   return (
